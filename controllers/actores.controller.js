@@ -69,7 +69,7 @@ const deleteActores =  async (req = request, res = response) =>{
     console.log('ACTORES DELETE');
     const { id } = req.params;
 
-    const actor = new Actor(id, first_name, last_name, last_update);
+    const actor = new Actor();
     try {
         await actor.borrar(id); 
         res.status(200).json({

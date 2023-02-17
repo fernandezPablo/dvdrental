@@ -55,28 +55,24 @@ class Staff extends Persistencia{
         `, []);
     }
 
-    async obtenerUno(id, retorno = true){
-        if (retorno){
-            return super.listar(`
-                SELECT 
-                    staff_id
-                    ,first_name
-                    ,last_name
-                    ,address_id
-                    ,email
-                    ,store_id,
-                    active
-                    ,username
-                    ,password
-                    ,last_update
-                FROM staff
-                WHERE
-                    staff_id = $1;
-            `, [id]);        
-        }
-        else{
-            // devolver el objeto
-        }
+    async obtenerUno(email){
+        console.log('Obtener uno');
+        return super.obtenerUno(`
+            SELECT 
+                staff_id
+                ,first_name
+                ,last_name
+                ,address_id
+                ,email
+                ,store_id,
+                active
+                ,username
+                ,password
+                ,last_update
+            FROM staff
+            WHERE
+                email = $1;
+        `, [email]);        
         
     }
 

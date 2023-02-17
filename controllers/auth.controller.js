@@ -1,24 +1,46 @@
 const { response } = require("express");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const { generateJWT } = require('../helpers/generar-jwt.helper');
 const Staff = require("../modelos/staff.modelo");
 
-const login = (req, res =  response) => {
+const login = async (req, res =  response) => {
     
     try {
+        const { correo, password } = req.body;
 
         //Verificar si el usuario existe
         const staff = new Staff();
-        // staff.obtenerUno();
-
+        const { rows } = await staff.obtenerUno(correo);
+        if(rows.length === 0)
+        {
+            return res.status(400).json({
+                msg: 'El usuario no existe!'
+            });   
+        }
+        
         //Verificar el estado del usuario
-
-
+        if(!rows[0].active){
+            return res.status(400).json({
+                msg: 'El usuario no esta activo!'
+            });   
+        }
+        
         //Verificar la contraseña
-
+        const result = await bcrypt.compare(password, rows[0].password);
+        if (!result){
+            return res.status(400).json({
+                msg: 'Contraseña incorrecta!'
+            });   
+        }
 
         //Generar JWT
+        const token = await generateJWT({ uid: rows[0].email});
 
         res.status(200).json({
-            msg: 'Login OK!'
+            msg: 'Login OK!',
+            token
         });   
     } catch (error) {
         res.status(500).json({
