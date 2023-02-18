@@ -14,7 +14,22 @@ const generateJWT = (payload) => {
     });
 }
 
+const generateRefreshJWT = (payload) => {
+    return new Promise( (resolve, reject) => {
+        try {
+            const resfreshtoken = jwt.sign(payload, process.env.PRIVATEREFRESHKEY,{
+                expiresIn: '1y'
+            });     
+            resolve(resfreshtoken);
+        } catch (error) {
+            console.log('Error al generar token', error);
+            reject('Error al generar token: ', error);
+        }
+    });    
+}
+
 
 module.exports = {
-    generateJWT 
+    generateJWT,
+    generateRefreshJWT 
 }

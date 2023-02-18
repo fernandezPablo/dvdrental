@@ -10,13 +10,9 @@ const validarJWT = (req = request, res = response, next) => {
             msg: 'Falta el token!!!'
         });
     }
-    
     try {
-        // const resultado = jwt.verify(token, process.env.PRIPRIVATEKEY);
-        const resultado = jwt.verify(token, 'N1e!S"ZQycSyVqK');
-        
+        const resultado = jwt.verify(token, process.env.PRIVATEKEY);
         console.log('VALIDEZ DEL TOKEN: ', resultado);
-        
         next();
     } catch (error) {        
         console.log('Error al verificar el token: ', error);

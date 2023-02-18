@@ -2,7 +2,7 @@ const { response } = require("express");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { generateJWT } = require('../helpers/generar-jwt.helper');
+const { generateJWT, generateRefreshJWT } = require('../helpers/generar-jwt.helper');
 const Staff = require("../modelos/staff.modelo");
 
 const login = async (req, res =  response) => {
@@ -37,10 +37,12 @@ const login = async (req, res =  response) => {
 
         //Generar JWT
         const token = await generateJWT({ uid: rows[0].email});
+        const refreshToken = await generateRefreshJWT({ uid: rows[0].email});
 
         res.status(200).json({
             msg: 'Login OK!',
-            token
+            token,
+            refreshToken
         });   
     } catch (error) {
         res.status(500).json({
