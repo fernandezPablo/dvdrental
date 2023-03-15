@@ -28,8 +28,7 @@ const generateRefreshJWT = (payload) => {
     });    
 }
 
-
 module.exports = {
     generateJWT,
-    generateRefreshJWT 
+    generateRefreshJWT
 }

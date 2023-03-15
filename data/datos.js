@@ -7,17 +7,25 @@ class Datos{
             host: process.env.HOST_DB,
             user: process.env.USER_DB,
             password: process.env.PASS_DB,
-            database: process.env.NAME_DB
-        });       
+            database: process.env.NAME_DB,
+            application_name: 'dvdrental-node'
+        });
+        this.cliente = this.getCliente();       
     }
 
-    async getCliente(){
-        return await this.pool.connect();
+    async getCliente(){            
+        this.cliente = await this.pool.connect(); 
+        return this.cliente;
     }
 
     async ejecutarConsulta(sqltext = '', values = []){
         console.log('EJECUTARCONSULTA');
         return (await this.getCliente()).query(sqltext, values);
+    }
+
+    cerrarConsulta(){
+        this.cliente.release();
+        this.cliente = undefined;
     }
 
 }

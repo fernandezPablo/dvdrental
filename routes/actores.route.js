@@ -6,14 +6,20 @@ const {
         putActores 
     } = require('../controllers/actores.controller');
 
-    const { validarJWT } = require('../middlewares/validar-jwt');
+const { validarJWT } = require('../middlewares/validar-jwt');
 
 
 const router = Router();
 
-router.get('/', getActores);
-router.post('/', postActores);
-router.put('/:id', putActores);
+router.get('/',
+    [validarJWT], 
+    getActores);
+router.post('/',
+    [validarJWT], 
+    postActores);
+router.put('/:id',
+    [validarJWT], 
+    putActores);
 router.delete(
     '/:id',
     [validarJWT], 

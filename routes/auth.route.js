@@ -3,7 +3,8 @@ const { check } = require('express-validator');
 const { validationResult } = require('express-validator');
 
 const { validarCampos } = require('../middlewares/validar-campos');
-const { login } = require('../controllers/auth.controller');
+const { validarRefreshJWT } = require('../middlewares/validar-jwt');
+const { login, refreshToken } = require('../controllers/auth.controller');
 
 const router = Router();
 
@@ -15,5 +16,11 @@ router.post(
         validarCampos,
     ],
      login);
+
+router.post(
+    '/refresh-token',
+    [validarRefreshJWT],
+    refreshToken
+);
 
 module.exports = router

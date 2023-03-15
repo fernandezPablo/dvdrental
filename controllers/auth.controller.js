@@ -2,7 +2,7 @@ const { response } = require("express");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { generateJWT, generateRefreshJWT } = require('../helpers/generar-jwt.helper');
+const { generateJWT, generateRefreshJWT, validarRefreshToken } = require('../helpers/generar-jwt.helper');
 const Staff = require("../modelos/staff.modelo");
 
 const login = async (req, res =  response) => {
@@ -12,7 +12,7 @@ const login = async (req, res =  response) => {
 
         //Verificar si el usuario existe
         const staff = new Staff();
-        const { rows } = await staff.obtenerUno(correo);
+        const { rows } = await staff.obtenerUno({correo});
         if(rows.length === 0)
         {
             return res.status(400).json({
@@ -51,6 +51,29 @@ const login = async (req, res =  response) => {
     }
 }
 
+const refreshToken = async (req = request, res = response) => {
+    const { correo } = req.body;
+    try {
+        //Generar JWT
+        const token = await generateJWT({ uid: correo});
+        const refreshToken = await generateRefreshJWT({ uid: correo});
+
+        res.status(200).json({
+            msg: 'Login OK!',
+            token,
+            refreshToken
+        });         
+
+    } catch (error) {
+        console.log('ERROR REFRESCO: ', error);
+        res.status(500).json({
+            msg: 'Error al procesar token de refresco.'
+        });
+    }
+
+}
+
 module.exports = {
-    login
+    login,
+    refreshToken
 }

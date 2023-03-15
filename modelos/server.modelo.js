@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
+const { validarJWT } = require('../middlewares/validar-jwt');
+
 class Server{
 
     constructor(){
@@ -18,8 +20,8 @@ class Server{
     }
 
     routes(){
-        this.app.use( this.actoresPath, require('../routes/actores.route') );
-        this.app.use( this.staffPath, require('../routes/staff.route') );
+        this.app.use( this.actoresPath, [validarJWT], require('../routes/actores.route') );
+        this.app.use( this.staffPath, /*[validarJWT],*/ require('../routes/staff.route') );
         this.app.use( this.authPath, require('../routes/auth.route') );
     }
 

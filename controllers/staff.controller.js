@@ -5,13 +5,24 @@ const getStaff = async (req = request, res = response) =>{
     console.log('STAFF GET');
     const staff = new Staff();
 
+    const id = req.query.staff_id;
+
     try {
-        const respuesta = await staff.listar();
-        console.log('Respuesta: ', respuesta);
-        res.status(200).json({
-            msg: 'STAFF GET',
-            response: respuesta.rows
-        });    
+        if (!id){
+            const respuesta = await staff.listar();
+            staff.cerrarConsulta();
+            // console.log('Respuesta: ', respuesta);
+            res.status(200).json(
+                respuesta.rows
+            );    
+        }
+        else{
+            const respuesta = await staff.obtenerUno({id});
+            staff.cerrarConsulta();
+            res.status(200).json(
+                respuesta.rows[0]
+            );           
+        }
     } catch (error) {
         res.status(500).json({
             msg: `Error al listar staffs ${error}`
@@ -19,28 +30,7 @@ const getStaff = async (req = request, res = response) =>{
     }
 };
 
-const getStaffUno = async (req = request, res = response) => {
-    console.log('STAFF UNO GET');
-    const staff = new Staff();
-    
-    const id = req.params.id;
-
-    try {
-        const respuesta = await staff.obtenerUno(id);
-        console.log('Respuesta: ', respuesta);
-        res.status(200).json({
-            msg: 'STAFF GET',
-            response: respuesta.rows
-        });    
-    } catch (error) {
-        res.status(500).json({
-            msg: `Error al listar staffs ${error}`
-        });    
-    }
-    
-}
-
-const postStaff =  async (req = request, res = response) =>{
+const postStaff =  async (req = request, res = response) => {
     console.log('STAFF POST');
 
     const { staff_id,
@@ -67,6 +57,7 @@ const postStaff =  async (req = request, res = response) =>{
     
     try {
         await staff.guardar();
+        staff.cerrarConsulta();
         res.status(201).json({
             msg: 'Staff creado correctamente'
         });    
@@ -104,6 +95,7 @@ const putStaff = async (req = request, res = response) => {
         password );
     try {
         await staff.modificar();
+        staff.cerrarConsulta();
         res.status(200).json({
             msg: 'Staff modificado correctamente...'
         });
@@ -121,6 +113,7 @@ const deleteStaff =  async (req = request, res = response) =>{
     const staff = new Staff();
     try {
         await staff.borrar(id); 
+        staff.cerrarConsulta();
         res.status(200).json({
             msg: 'Staff eliminado correctamente...'
         });    
@@ -132,8 +125,7 @@ const deleteStaff =  async (req = request, res = response) =>{
 };
 
 module.exports = {
-    getStaff, 
-    getStaffUno,   
+    getStaff,  
     postStaff,    
     deleteStaff,
     putStaff    

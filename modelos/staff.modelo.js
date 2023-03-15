@@ -55,8 +55,9 @@ class Staff extends Persistencia{
         `, []);
     }
 
-    async obtenerUno(email){
-        console.log('Obtener uno');
+    async obtenerUno({correo, id}){
+        //* Se puede consultar los staff por id o por correo de acuerdo
+        //* a lo que se defina en el objeto pasado como parámetro
         return super.obtenerUno(`
             SELECT 
                 staff_id
@@ -71,8 +72,8 @@ class Staff extends Persistencia{
                 ,last_update
             FROM staff
             WHERE
-                email = $1;
-        `, [email]);        
+                ${(id)?'staff_id':'email'}=$1
+        `, (id)?[id]:[correo]);        
         
     }
 
@@ -85,8 +86,7 @@ class Staff extends Persistencia{
 
         return super.guardar(`
         INSERT INTO staff(
-            staff_id
-           ,first_name
+            first_name
            ,last_name
            ,address_id
            ,email
@@ -102,11 +102,9 @@ class Staff extends Persistencia{
            ,$5
            ,$6
            ,$7
-           ,$8
-           ,$9);              
+           ,$8);              
         `,
         [
-            this.staff_id,
             this.first_name,
             this.last_name,
             this.address_id,
@@ -120,7 +118,34 @@ class Staff extends Persistencia{
     }
 
     async modificar(){
-        return this.pool.query(`
+        // return this.pool.query(`
+        // UPDATE 
+        //     staff
+        // SET 
+        //     first_name=$2
+        //     ,last_name=$3
+        //     ,address_id=$4
+        //     ,email=$5
+        //     ,store_id=$6
+        //     ,active=$7
+        //     ,username=$8
+        //     ,password=$9
+        //     ,last_update=(SELECT current_timestamp(0))
+        // WHERE
+        //     staff_id=$1;           
+        // `,
+        // [
+        //     this.staff_id,
+        //     this.first_name,
+        //     this.last_name,
+        //     this.address_id,
+        //     this.email,
+        //     this.store_id,
+        //     this.active,
+        //     this.username,
+        //     this.password
+        // ]);
+        return super.modificar(`
         UPDATE 
             staff
         SET 
@@ -150,7 +175,7 @@ class Staff extends Persistencia{
     }
 
     async borrar(id){
-        return this.pool.query(`
+        return super.borrar(`
         DELETE FROM 
             staff
         WHERE
@@ -159,6 +184,9 @@ class Staff extends Persistencia{
         [id] 
         );
     }
+
 }
+
+
 
 module.exports = Staff;
