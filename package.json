@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pm2": "pm2 start app.js --watch",
+    "pm2mem": "pm2 start app.js --watch --node-args='--max-old-space-size=2048'",
+    "monitor": "pm2 monit"
   },
   "keywords": [],
   "author": "",

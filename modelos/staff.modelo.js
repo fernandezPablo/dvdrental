@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
+const BaseModel = require('./base-model.modelo');
 
 const { Persistencia } = require('./persistencia.modelo');
 

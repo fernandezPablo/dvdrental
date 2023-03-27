@@ -11,6 +11,7 @@ class Server{
         this.actoresPath = '/api/actores';
         this.staffPath = '/api/staff';
         this.authPath = '/api/auth';
+        this.countriesPath = '/api/countries';
 
         //middlewares
         this.middlewares();
@@ -23,6 +24,8 @@ class Server{
         this.app.use( this.actoresPath, [validarJWT], require('../routes/actores.route') );
         this.app.use( this.staffPath, /*[validarJWT],*/ require('../routes/staff.route') );
         this.app.use( this.authPath, require('../routes/auth.route') );
+        this.app.use( this.countriesPath, require('../routes/countries.route') );
+        this.app.get('/api/prueba', (req, res) => res.status(200).json({msg: 'prueba...'}));
     }
 
     middlewares(){
