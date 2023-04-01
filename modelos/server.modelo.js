@@ -12,6 +12,7 @@ class Server{
         this.staffPath = '/api/staff';
         this.authPath = '/api/auth';
         this.countriesPath = '/api/countries';
+        this.categoriesPath = '/api/categories';
 
         //middlewares
         this.middlewares();
@@ -25,6 +26,7 @@ class Server{
         this.app.use( this.staffPath, /*[validarJWT],*/ require('../routes/staff.route') );
         this.app.use( this.authPath, require('../routes/auth.route') );
         this.app.use( this.countriesPath, require('../routes/countries.route') );
+        this.app.use( this.categoriesPath, require('../routes/categories.route') );
         this.app.get('/api/prueba', (req, res) => res.status(200).json({msg: 'prueba...'}));
     }
 
