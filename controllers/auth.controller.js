@@ -39,10 +39,22 @@ const login = async (req, res =  response) => {
         const token = await generateJWT({ uid: rows[0].email});
         const refreshToken = await generateRefreshJWT({ uid: rows[0].email});
 
+        //* Envió los datos de autenticación al cliente a traves de cookies
+        //* en lugar de usar el Localstorage. Las cookies me permiten establecer
+        //* opciones de seguridad como httpOnly que ayudan a evitar ataques de XSS
+        //* o maxAge que establece una fecha de expiración de las cookies.
+        res.cookie('ssid',token, {
+            httpOnly: true,
+            maxAge: 1000 * 60 
+        });
+        res.cookie('ssid_refresh',refreshToken, {
+            httpOnly: true,
+            maxAge: 1000 * 60
+        });
         res.status(200).json({
             msg: 'Login OK!',
-            token,
-            refreshToken
+            // token,
+            // refreshToken
         });   
     } catch (error) {
         res.status(500).json({

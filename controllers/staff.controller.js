@@ -12,6 +12,7 @@ const getStaff = async (req = request, res = response) =>{
             const respuesta = await staff.listar();
             staff.cerrarConsulta();
             // console.log('Respuesta: ', respuesta);
+            // res.cookie('testcookie','testing');
             res.status(200).json(
                 respuesta.rows
             );    
@@ -19,6 +20,7 @@ const getStaff = async (req = request, res = response) =>{
         else{
             const respuesta = await staff.obtenerUno({id});
             staff.cerrarConsulta();
+            // res.cookie('testcookie','testing');
             res.status(200).json(
                 respuesta.rows[0]
             );           

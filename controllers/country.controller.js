@@ -4,8 +4,8 @@ const {Country} = require('../modelos/country.modelo');
 const listarCountries = async (req = request, res = response) => {
     const country = new Country();
     try {
+        console.log('Usuario logueado: ', req.usuario);
         const rows = await country.consultar();
-        console.log('Paises: ', rows);
         res.status(200).json({
             rows
         });
@@ -23,7 +23,7 @@ const guardarCountry = async (req = request, res = response) => {
     countryObj.country_id = country_id;
     countryObj.country = country;
     try {
-        await countryObj.guardar('I', [countryObj.country_id, countryObj.country]);
+        await countryObj.guardar('I', [countryObj.country]);
         res.status(201).json({
             msg: 'Alta pasís ok'
         });
@@ -35,4 +35,30 @@ const guardarCountry = async (req = request, res = response) => {
     }    
 }
 
-module.exports = { listarCountries, guardarCountry }
+const existePais = async (req = request, res = response) => {
+    const country = new Country();
+    
+    const { pais } = req.query;
+
+    try {
+        const resp = await country.existePais(pais);
+        if(resp)
+        res.status(200).json({
+            result: true,
+            msg: 'El país ya existe.'
+        });
+        else
+        res.status(200).json({
+            result: false,
+            msg: 'El país no existe.'
+        });      
+    } catch (error) {
+        console.log('Error al consultar existencia del pais: ', error);
+        res.status(500).json({
+            msg: 'Error al consultar existencia del país'
+        });
+    }
+        
+}
+
+module.exports = { listarCountries, guardarCountry, existePais }

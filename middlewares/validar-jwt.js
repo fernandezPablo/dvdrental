@@ -1,9 +1,13 @@
 const { request, response } = require('express');
+const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
 const { TokenExpiredError } = require('jsonwebtoken');
 
-const validarJWT = (req = request, res = response, next) => {
-    const { token } = req.headers;
+
+const validarJWT = async (req = request, res = response, next) => {
+    // const { token } = req.headers;
+    const  token  = req.cookies['ssid'];
+    // console.log('Cookies: ', cookies['ssid']);
     // console.log('Validando token...', req.headers);
     if (!token){
         return res.status(401).json({
@@ -13,6 +17,31 @@ const validarJWT = (req = request, res = response, next) => {
     try {
         const resultado = jwt.verify(token, process.env.PRIVATEKEY);
         console.log('VALIDEZ DEL TOKEN: ', resultado);
+        const pool = new Pool({
+            host: process.env.HOST_DB,
+            user: process.env.USER_DB,
+            password: process.env.PASS_DB,
+            database: process.env.NAME_DB,
+            application_name: 'dvdrental-node'    
+        });
+        const resp = await pool.query(`
+            SELECT 
+                staff_id,
+                first_name,
+                last_name,
+                address_id,
+                email,
+                store_id,
+                active,
+                username
+            FROM staff
+            WHERE
+                email = $1;
+        `,[
+            resultado.uid
+        ]);
+        console.log('Usuario: ', resp.rows[0]);
+        req.usuario = resp.rows[0];
         next();
     } catch (error) {
         if (error instanceof TokenExpiredError) {

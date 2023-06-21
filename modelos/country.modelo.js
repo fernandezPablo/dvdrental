@@ -1,4 +1,5 @@
 const {BaseModel} = require('./base-model.modelo');
+const { datos } = require('../data/datos');
 
 class Country extends BaseModel{
 
@@ -17,12 +18,37 @@ class Country extends BaseModel{
 
         this.insertquery = `
             INSERT INTO country(
-                country_id,
                 country)
             VALUES (
-                $1,
-                $2);
+                $1);
         `;
+    }
+
+    existePais(pais){
+        if(!pais) return Promise.reject('Debe indicar el país a consultar');
+
+        return new Promise( async (resolve, reject) => {
+            const cliente = await datos.getCliente();
+
+            try {
+                const resp = await cliente.query(`
+                SELECT 
+                    1
+                FROM country
+                WHERE
+                    UPPER(country) = UPPER($1);
+                `,
+                [
+                    pais
+                ]);
+                resolve(resp.rows.length > 0);
+            } catch (error) {
+                reject(error);
+            }
+            finally{
+                cliente.release();
+            }
+        });
     }
 }
 

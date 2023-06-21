@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pm2": "pm2 start app.js --watch",
+    "open": "pm2 start app.js --watch",
+    "close": "pm2 delete app.js",
     "pm2mem": "pm2 start app.js --watch --node-args='--max-old-space-size=2048'",
     "monitor": "pm2 monit"
   },
@@ -14,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
