@@ -51,11 +51,14 @@ const login = async (req, res =  response) => {
             httpOnly: true,
             maxAge: 1000 * 60
         });
+        // res.setHeader('Access-Control-Allow-Origin','localhost:4200');
+        // res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.status(200).json({
             msg: 'Login OK!',
             // token,
             // refreshToken
-        });   
+        });
+        
     } catch (error) {
         res.status(500).json({
             msg: 'Error interno: ' + error

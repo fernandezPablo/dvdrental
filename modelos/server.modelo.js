@@ -33,7 +33,7 @@ class Server{
 
     middlewares(){
         //*CORS
-        this.app.use( cors() );
+        this.app.use( cors({origin: 'http://localhost:4200', credentials: true}) );
         //*Parseo de body
         this.app.use( express.json() );
         this.app.use( cookieParser());
